@@ -1,4 +1,5 @@
 # Provider spcific
+# git updated from website
 provider "aws" {
     region = "${var.aws_region}"
 }
@@ -48,58 +49,48 @@ module "priv_sg" {
 }
 
 module "ec2-public1" {
-	source = "./modules/ec2"
-	name = "bastion"
-	environment = "dev"
-	server_role = "web"
-	ami_id = "ami-05fa00d4c63e32376"
-	key_name = "${module.ec2key.ec2key_name}"
-	count1 = "1"
-	security_group_id = "${module.ssh_sg.ssh_sg_id},${module.web_sg.web_sg_id}"
-	subnet_id = "${module.vpc_subnets.public_subnets_id}"
-	instance_type = "t2.medium"
-	user_data = "#!/bin/bash\napt-get -y update\napt-get -y install nginx\n"
-}
-
-
-module "ec2-private1" {
         source = "./modules/ec2"
         name = "jenkins"
         environment = "dev"
         server_role = "web"
-        ami_id = "ami-08d4ac5b634553e16"
+        ami_id = "ami-0a6b2839d44d781b2"
         key_name = "${module.ec2key.ec2key_name}"
         count1 = "1"
         security_group_id = "${module.ssh_sg.ssh_sg_id},${module.web_sg.web_sg_id}"
-        subnet_id = "${module.vpc_subnets.private_subnets_id}"
-        instance_type = "t2.micro"
-        user_data = "#!/bin/bash\napt-get -y update\napt-get -y install nginx\n"
+        subnet_id = "${module.vpc_subnets.public_subnets_id}"
+        instance_type = "t2.medium"
+        user_data = "${file("jenkins.sh")}"
 }
 
-module "ec2-private2" {
+
+module "ec2-public2" {
         source = "./modules/ec2"
-        name = "app-server"
+        name = "sonar"
         environment = "dev"
         server_role = "web"
-        ami_id = "ami-08d4ac5b634553e16"
+        ami_id = "ami-061dbd1209944525c"
         key_name = "${module.ec2key.ec2key_name}"
         count1 = "1"
         security_group_id = "${module.ssh_sg.ssh_sg_id},${module.web_sg.web_sg_id}"
-        subnet_id = "${module.vpc_subnets.private_subnets_id}"
-        instance_type = "t2.micro"
-        user_data = "#!/bin/bash\napt-get -y update\napt-get -y install nginx\n"
+        subnet_id = "${module.vpc_subnets.public_subnets_id}"
+        instance_type = "t2.medium"
+        user_data = "${file("sonar.sh")}"
 }
 
 
-
-
-module "elb" {
-	source = "./modules/elb"
-	name = "upgrad-project"
-	environment = "dev"
-	security_groups = "${module.priv_sg.elb_sg_id}"
-	availability_zones = "us-east-1a,us-east-1b"
-	subnets = "${module.vpc_subnets.public_subnets_id}"
-	instance_id = "${module.ec2-public1.ec2_id}"
+module "ec2-public3" {
+        source = "./modules/ec2"
+        name = "eksctl"
+        environment = "dev"
+        server_role = "web"
+        ami_id = "ami-0a6b2839d44d781b2"
+        key_name = "${module.ec2key.ec2key_name}"
+        count1 = "1"
+        security_group_id = "${module.ssh_sg.ssh_sg_id},${module.web_sg.web_sg_id}"
+        subnet_id = "${module.vpc_subnets.public_subnets_id}"
+        instance_type = "t2.medium"
+        user_data = "${file("installations.sh")}"
 }
+
+
 
