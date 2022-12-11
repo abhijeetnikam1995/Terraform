@@ -22,12 +22,12 @@ output "priv_sg_id" {
   value = "${module.priv_sg.elb_sg_id}"
 }
 
-
+/*
 output "elb_dns_name" {
   value = "${module.elb.elb_dns_name}"
 }
 
-/*
+
 output "ec2key_name" {
   value = "${module.ec2key.ec2key_name}"
 }
