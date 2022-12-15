@@ -13,4 +13,3 @@ mv ./kubectl ~/.local/bin/kubectl
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/eksctl /usr/local/bin
 eksctl version
-aws configure set aws_access_key_id "AKIAQMI4XMFF665LTVXR" --profile user2 && aws configure set aws_secret_access_key "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" --profile user2 && aws configure set region "us-east-1" --profile user2 && aws configure set output "text" --profile user2
